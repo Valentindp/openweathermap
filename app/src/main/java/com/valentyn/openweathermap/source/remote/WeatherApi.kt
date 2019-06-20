@@ -16,12 +16,6 @@ interface WeatherApi {
     @GET("weather")
     fun getCurrentWeatherByCityID(@QueryMap options: Map<String, String>): Call<CurrentWeather>
 
-    @GET("weather")
-    fun getCurrentWeatherByGeoCoordinates(@QueryMap options: Map<String, String>): Call<CurrentWeather>
-
-    @GET("weather")
-    fun getCurrentWeatherByZipCode(@QueryMap options: Map<String, String>): Call<CurrentWeather>
-
 
     @GET("forecast/daily")
     fun getDailyWeatherForecastByCityName(@QueryMap options: Map<String, String>): Call<DailyWeatherForecast>
@@ -29,20 +23,14 @@ interface WeatherApi {
     @GET("forecast/daily")
     fun getDailyWeatherForecastByCityID(@QueryMap options: Map<String, String>): Call<DailyWeatherForecast>
 
-    @GET("forecast/daily")
-    fun getDailyWeatherForecastByGeoCoordinates(@QueryMap options: Map<String, String>): Call<DailyWeatherForecast>
-
-    @GET("forecast/daily")
-    fun getDailyWeatherForecastByZipCode(@QueryMap options: Map<String, String>): Call<DailyWeatherForecast>
-
     companion object Factory {
         fun getClient(): WeatherApi {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://api.openweathermap.org")
+                .baseUrl("http://api.openweathermap.org/data/2.5/")
                 .build()
 
-            return retrofit.create(WeatherApi::class.java);
+            return retrofit.create(WeatherApi::class.java)
         }
     }
 }

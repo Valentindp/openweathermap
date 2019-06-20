@@ -2,7 +2,7 @@ package com.valentyn.openweathermap.models.common
 
 import com.google.gson.annotations.SerializedName
 
-data class System(
+data class Sys(
     @field:SerializedName("type")
     val type: Int? = null,
 

@@ -21,7 +21,7 @@ object WeatherRemoteDataSource : WeatherDataSource {
     private const val CITY_ID = "id"
 
     private val weatherApi = WeatherApi.getClient()
-    private val defOptions: HashMap<String, String> = hashMapOf(apiKey to APPID, "ru" to LANGUAGE, "metric" to UNITS)
+    private val defOptions: HashMap<String, String> = hashMapOf(APPID to apiKey, LANGUAGE to "ru", UNITS to "metric")
 
     override fun getCurrentWeatherByCityName(cityName: String, callback: WeatherDataSource.GetCurrentWeatherCallback) {
 

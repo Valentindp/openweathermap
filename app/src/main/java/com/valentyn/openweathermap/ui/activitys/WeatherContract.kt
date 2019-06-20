@@ -11,15 +11,13 @@ interface WeatherContract {
 
         fun setLoadingIndicator(active: Boolean)
 
-        fun showCurrentWeather(tasks: List<CurrentWeather>)
+        fun showCurrentWeather(currentWeather: CurrentWeather)
 
         fun showAddCurrentWeather()
 
         fun showCurrentWeatherDetailsUi(cityId: Int)
 
-        fun showCurrentWeatherError()
-
-        fun showNoCurrentWeather()
+        fun showCurrentWeatherError(message : String?)
 
         fun showSuccessfullySavedMessage()
 

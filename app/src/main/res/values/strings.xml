@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">openweathermap</string>
+    <string name="Error_load_weather">Error while loading weather</string>
+    <string name="City_saved">City saved</string>
 </resources>

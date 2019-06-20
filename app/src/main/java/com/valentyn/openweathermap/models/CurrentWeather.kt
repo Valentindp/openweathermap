@@ -6,14 +6,6 @@ import java.lang.System
 import java.util.*
 
 data class CurrentWeather (
-    @field:SerializedName("dt")
-    private val dt: Int? = null,
-
-    @field:SerializedName("rain")
-    val rainData: Rain? = null,
-
-    @field:SerializedName("snow")
-    val snowData: Snow? = null,
 
     @field:SerializedName("coord")
     val coordData: Coord? = null,
@@ -21,29 +13,42 @@ data class CurrentWeather (
     @field:SerializedName("weather")
     val weatherList: List<Weather?>? = null,
 
-    @field:SerializedName("name")
-    val cityName: String? = null,
+    @field:SerializedName("base")
+    val baseStation: String? = null,
 
-    @field:SerializedName("cod")
-    val respCode: Int? = null,
+    @SerializedName("main")
+    val main: Main? = null,
 
-    @field:SerializedName("main")
-    val mainData: Main? = null,
+    @SerializedName("visibility")
+    val visibility: Int? = null,
+
+    @field:SerializedName("wind")
+    val windData: Wind? = null,
+
+    @field:SerializedName("rain")
+    val rainData: Rain? = null,
 
     @field:SerializedName("clouds")
     val cloudData: Cloud? = null,
 
-    @field:SerializedName("id")
-    val cityId: Int? = null,
+    @field:SerializedName("dt")
+    private val dt: Int? = null,
 
     @field:SerializedName("sys")
     val systemData: System? = null,
 
-    @field:SerializedName("base")
-    val baseStation: String? = null,
+    @field:SerializedName("timezone")
+    val timezone: Int? = null,
 
-    @field:SerializedName("wind")
-    val windData: Wind? = null
+    @field:SerializedName("id")
+    val cityId: Int? = null,
+
+    @field:SerializedName("name")
+    val cityName: String? = null,
+
+    @field:SerializedName("cod")
+    val respCode: Int? = null
+
 ){
     val dateTime: Date?
         get() {

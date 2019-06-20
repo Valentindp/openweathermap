@@ -47,5 +47,17 @@ class WeatherRepository(val weatherRemoteDataSource: WeatherRemoteDataSource) : 
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    companion object {
 
+        private var INSTANCE: WeatherRepository? = null
+
+        @JvmStatic fun getInstance(weatherRemoteDataSource: WeatherRemoteDataSource): WeatherRepository {
+            return INSTANCE ?: WeatherRepository(weatherRemoteDataSource)
+                .apply { INSTANCE = this }
+        }
+
+        @JvmStatic fun destroyInstance() {
+            INSTANCE = null
+        }
+    }
 }
