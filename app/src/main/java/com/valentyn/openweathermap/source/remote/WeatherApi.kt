@@ -3,12 +3,13 @@ package com.valentyn.openweathermap.source.remote
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.models.DailyWeatherForecast
 import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
 interface WeatherApi {
 
-    //Current Weather Endpoints start
     @GET("weather")
     fun getCurrentWeatherByCityName(@QueryMap options: Map<String, String>): Call<CurrentWeather>
 
@@ -21,9 +22,7 @@ interface WeatherApi {
     @GET("weather")
     fun getCurrentWeatherByZipCode(@QueryMap options: Map<String, String>): Call<CurrentWeather>
 
-    //Current Weather Endpoints end
 
-    //Three hour forecast endpoints start
     @GET("forecast/daily")
     fun getDailyWeatherForecastByCityName(@QueryMap options: Map<String, String>): Call<DailyWeatherForecast>
 
@@ -36,4 +35,14 @@ interface WeatherApi {
     @GET("forecast/daily")
     fun getDailyWeatherForecastByZipCode(@QueryMap options: Map<String, String>): Call<DailyWeatherForecast>
 
+    companion object Factory {
+        fun getClient(): WeatherApi {
+            val retrofit = Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://api.openweathermap.org")
+                .build()
+
+            return retrofit.create(WeatherApi::class.java);
+        }
+    }
 }
