@@ -4,11 +4,11 @@ import com.valentyn.openweathermap.models.CurrentWeather
 
 interface WeatherDataSource {
 
-    interface LoadCurrentWeatherAllCallback {
+    interface LoadCurrentWeatherListCallback {
 
-        fun onCurrentWeatherAllLoaded(currentWeatherAll: List<CurrentWeather>)
+        fun onCurrentWeatherListLoaded(currentWeatherList: List<CurrentWeather>)
 
-        fun onDataNotAvailable()
+        fun onDataNotAvailable(throwable: Throwable)
     }
 
     interface GetCurrentWeatherCallback {
@@ -18,9 +18,7 @@ interface WeatherDataSource {
         fun onDataNotAvailable(throwable: Throwable)
     }
 
-    fun getCurrentWeatherAll(callback: LoadCurrentWeatherAllCallback)
-
-    fun getCurrentWeatherByCityId(currentWeatherId: Int, callback: GetCurrentWeatherCallback)
+    fun getCurrentWeatherList(listId: List<Int>, callback: LoadCurrentWeatherListCallback)
 
     fun getCurrentWeatherByCityName(cityName: String, callback: GetCurrentWeatherCallback)
 

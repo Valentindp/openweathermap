@@ -38,8 +38,8 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showCurrentWeather(currentWeather: CurrentWeather) {
-        currentWeatherAdapter.updateData(listOf(currentWeather))
+    override fun showCurrentWeather(currentWeatherList: List<CurrentWeather>) {
+        currentWeatherAdapter.updateData(currentWeatherList)
     }
 
     override fun showAddCurrentWeather() {
@@ -59,7 +59,7 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
     }
 
     private fun showMessage(message: String) {
-       Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+       Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
 }

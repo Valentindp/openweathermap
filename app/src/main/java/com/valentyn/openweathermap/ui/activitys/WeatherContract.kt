@@ -11,7 +11,7 @@ interface WeatherContract {
 
         fun setLoadingIndicator(active: Boolean)
 
-        fun showCurrentWeather(currentWeather: CurrentWeather)
+        fun showCurrentWeather(currentWeatherList: List<CurrentWeather>)
 
         fun showAddCurrentWeather()
 

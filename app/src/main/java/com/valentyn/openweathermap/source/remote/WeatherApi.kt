@@ -1,6 +1,7 @@
 package com.valentyn.openweathermap.source.remote
 
 import com.valentyn.openweathermap.models.CurrentWeather
+import com.valentyn.openweathermap.models.CurrentWeatherList
 import com.valentyn.openweathermap.models.DailyWeatherForecast
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -13,8 +14,8 @@ interface WeatherApi {
     @GET("weather")
     fun getCurrentWeatherByCityName(@QueryMap options: Map<String, String>): Call<CurrentWeather>
 
-    @GET("weather")
-    fun getCurrentWeatherByCityID(@QueryMap options: Map<String, String>): Call<CurrentWeather>
+    @GET("group")
+    fun getCurrentWeatherByArrayCityID(@QueryMap options: Map<String, String>): Call<CurrentWeatherList>
 
 
     @GET("forecast/daily")

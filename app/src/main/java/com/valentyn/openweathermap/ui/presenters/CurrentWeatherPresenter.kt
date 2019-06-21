@@ -36,6 +36,18 @@ class CurrentWeatherPresenter(val weatherRepository: WeatherRepository, val weat
 
     fun loadCurrentWeather() {
 
+        weatherRepository.getCurrentWeatherList(listOf(625665,703448,702550), object : WeatherDataSource.LoadCurrentWeatherListCallback{
+            override fun onCurrentWeatherListLoaded(currentWeatherList: List<CurrentWeather>) {
+                weatherView.showCurrentWeather(currentWeatherList)
+            }
+
+            override fun onDataNotAvailable(throwable: Throwable) {
+                weatherView.let { weatherView.showCurrentWeatherError(throwable.message) }
+            }
+
+        })
+
+        /*
         weatherRepository.getCurrentWeatherByCityName("Днепр", object : WeatherDataSource.GetCurrentWeatherCallback {
             override fun onCurrentWeatherLoaded(currentWeather: CurrentWeather) {
                 weatherView.showCurrentWeather(currentWeather)
@@ -45,6 +57,7 @@ class CurrentWeatherPresenter(val weatherRepository: WeatherRepository, val weat
                 weatherView.let { weatherView.showCurrentWeatherError(throwable.message) }
             }
         })
+        */
 
     }
 }

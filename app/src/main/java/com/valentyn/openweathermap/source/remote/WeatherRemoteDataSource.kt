@@ -1,6 +1,7 @@
 package com.valentyn.openweathermap.source.remote
 
 import com.valentyn.openweathermap.models.CurrentWeather
+import com.valentyn.openweathermap.models.CurrentWeatherList
 import com.valentyn.openweathermap.source.WeatherDataSource
 import org.json.JSONException
 import org.json.JSONObject
@@ -12,7 +13,7 @@ import java.net.HttpURLConnection
 
 object WeatherRemoteDataSource : WeatherDataSource {
 
-    private const val apiKey = "9f5185add27bd1e6734c95f16284b007"
+    private const val apiKey = "d48cbca4126b1d23452ae6654400e4b0"
 
     private const val APPID = "appId"
     private const val UNITS = "units"
@@ -37,16 +38,22 @@ object WeatherRemoteDataSource : WeatherDataSource {
             }
         })
     }
+    
+    override fun getCurrentWeatherList(listId: List<Int>, callback: WeatherDataSource.LoadCurrentWeatherListCallback) {
 
-    override fun getCurrentWeatherByCityId(
-        currentWeatherId: Int,
-        callback: WeatherDataSource.GetCurrentWeatherCallback
-    ) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        val stringId = listId.toString().substring(1, listId.toString().length - 1).replace(" ", "")
 
-    override fun getCurrentWeatherAll(callback: WeatherDataSource.LoadCurrentWeatherAllCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val options = HashMap(defOptions).apply { put(CITY_ID, stringId) }
+
+        weatherApi.getCurrentWeatherByArrayCityID(options).enqueue(object : Callback<CurrentWeatherList> {
+            override fun onResponse(call: Call<CurrentWeatherList>, response: Response<CurrentWeatherList>) {
+                handleListCurrentWeatherResponse(response, callback)
+            }
+
+            override fun onFailure(call: Call<CurrentWeatherList>, throwable: Throwable) {
+                callback.onDataNotAvailable(throwable)
+            }
+        })
     }
 
     override fun createCurrentWeather(currentWeather: CurrentWeather) {
@@ -96,6 +103,23 @@ object WeatherRemoteDataSource : WeatherDataSource {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun handleListCurrentWeatherResponse(
+        response: Response<CurrentWeatherList>,
+        callback: WeatherDataSource.LoadCurrentWeatherListCallback
+    ) = when {
+        response.code() == HttpURLConnection.HTTP_OK && response.body() != null -> {
+            callback.onCurrentWeatherListLoaded((response.body()!!.list ?: listOf<CurrentWeather>()) as List<CurrentWeather>)
+        }
+        response.code() == HttpURLConnection.HTTP_FORBIDDEN || response.code() == HttpURLConnection.HTTP_UNAUTHORIZED -> callback.onDataNotAvailable(
+            appIdErrMessage()
+        )
+        else -> try {
+            callback.onDataNotAvailable(errorMsg(response.errorBody()!!.string()))
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 }

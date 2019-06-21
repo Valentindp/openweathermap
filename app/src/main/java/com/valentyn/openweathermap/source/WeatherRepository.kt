@@ -11,7 +11,6 @@ class WeatherRepository(val weatherRemoteDataSource: WeatherRemoteDataSource) : 
     override fun getCurrentWeatherByCityName(cityName: String, callback: WeatherDataSource.GetCurrentWeatherCallback) {
 
         weatherRemoteDataSource.getCurrentWeatherByCityName(cityName, object : WeatherDataSource.GetCurrentWeatherCallback {
-
                 override fun onCurrentWeatherLoaded(currentWeather: CurrentWeather) {
                     //refreshCache(tasks)
                     //refreshLocalDataSource(tasks)
@@ -24,15 +23,19 @@ class WeatherRepository(val weatherRemoteDataSource: WeatherRemoteDataSource) : 
             })
     }
 
+    override fun getCurrentWeatherList(listId: List<Int>, callback: WeatherDataSource.LoadCurrentWeatherListCallback) {
 
-    override fun getCurrentWeatherAll(callback: WeatherDataSource.LoadCurrentWeatherAllCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        weatherRemoteDataSource.getCurrentWeatherList(listId, object : WeatherDataSource.LoadCurrentWeatherListCallback {
+            override fun onCurrentWeatherListLoaded(currentWeatherList: List<CurrentWeather>) {
+                //refreshCache(tasks)
+                //refreshLocalDataSource(tasks)
+                callback.onCurrentWeatherListLoaded(currentWeatherList)
+            }
 
-    override fun getCurrentWeatherByCityId(
-        currentWeatherId: Int, callback: WeatherDataSource.GetCurrentWeatherCallback
-    ) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun onDataNotAvailable(throwable: Throwable) {
+                callback.onDataNotAvailable(throwable)
+            }
+        })
     }
 
     override fun createCurrentWeather(currentWeather: CurrentWeather) {
