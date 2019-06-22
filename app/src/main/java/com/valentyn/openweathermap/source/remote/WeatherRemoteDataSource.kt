@@ -11,7 +11,7 @@ import retrofit2.Response
 import java.io.IOException
 import java.net.HttpURLConnection
 
-object WeatherRemoteDataSource : WeatherDataSource {
+object WeatherRemoteDataSource  {
 
     private const val apiKey = "d48cbca4126b1d23452ae6654400e4b0"
 
@@ -22,9 +22,9 @@ object WeatherRemoteDataSource : WeatherDataSource {
     private const val CITY_ID = "id"
 
     private val weatherApi = WeatherApi.getClient()
-    private val defOptions: HashMap<String, String> = hashMapOf(APPID to apiKey, LANGUAGE to "ru", UNITS to "metric")
+    private val defOptions: HashMap<String, String> = hashMapOf(APPID to apiKey, LANGUAGE to "ua", UNITS to "metric")
 
-    override fun getCurrentWeatherByCityName(cityName: String, callback: WeatherDataSource.GetCurrentWeatherCallback) {
+     fun getCurrentWeatherByCityName(cityName: String, callback: WeatherDataSource.GetCurrentWeatherCallback) {
 
         val options = HashMap(defOptions).apply { put(QUERY, cityName) }
 
@@ -39,7 +39,7 @@ object WeatherRemoteDataSource : WeatherDataSource {
         })
     }
     
-    override fun getCurrentWeatherList(listId: List<Int>, callback: WeatherDataSource.LoadCurrentWeatherListCallback) {
+     fun getCurrentWeatherList(listId: List<Int>, callback: WeatherDataSource.LoadCurrentWeatherListCallback) {
 
         val stringId = listId.toString().substring(1, listId.toString().length - 1).replace(" ", "")
 
@@ -54,18 +54,6 @@ object WeatherRemoteDataSource : WeatherDataSource {
                 callback.onDataNotAvailable(throwable)
             }
         })
-    }
-
-    override fun createCurrentWeather(currentWeather: CurrentWeather) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun updateCurrentWeather(currentWeatherId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun deleteCurrentWeather(currentWeatherId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun appIdErrMessage(): Throwable {
@@ -111,7 +99,7 @@ object WeatherRemoteDataSource : WeatherDataSource {
         callback: WeatherDataSource.LoadCurrentWeatherListCallback
     ) = when {
         response.code() == HttpURLConnection.HTTP_OK && response.body() != null -> {
-            callback.onCurrentWeatherListLoaded((response.body()!!.list ?: listOf<CurrentWeather>()) as List<CurrentWeather>)
+            callback.onCurrentWeatherListLoaded(response.body()!!.list as List<CurrentWeather>)
         }
         response.code() == HttpURLConnection.HTTP_FORBIDDEN || response.code() == HttpURLConnection.HTTP_UNAUTHORIZED -> callback.onDataNotAvailable(
             appIdErrMessage()

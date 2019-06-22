@@ -1,9 +1,10 @@
 package com.valentyn.openweathermap.ui.presenters
 
+import android.app.Activity
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.source.WeatherDataSource
 import com.valentyn.openweathermap.source.WeatherRepository
-import com.valentyn.openweathermap.ui.activitys.WeatherContract
+import com.valentyn.openweathermap.ui.activitys.AddCityActivity
 
 class CurrentWeatherPresenter(val weatherRepository: WeatherRepository, val weatherView: WeatherContract.View) :
     WeatherContract.Presenter {
@@ -15,28 +16,28 @@ class CurrentWeatherPresenter(val weatherRepository: WeatherRepository, val weat
     }
 
     override fun start() {
-        loadCurrentWeather()
+        loadCurrentWeather(false)
     }
 
     override fun result(requestCode: Int, resultCode: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (AddCityActivity.REQUEST_ADD_CITY ==
+            requestCode && Activity.RESULT_OK == resultCode
+        ) {
+            weatherView.showSuccessfullySavedMessage()
+        }
     }
 
     override fun loadCurrentWeather(forceUpdate: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        loadCurrentWeather(forceUpdate || firstLoad, true)
+        firstLoad = false
     }
 
-    override fun addCurrentWeather() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    fun loadCurrentWeather(forceUpdate: Boolean, showLoadingUI: Boolean) {
+        if (forceUpdate) {
+            weatherRepository.refreshCurrentWeather()
+        }
 
-    override fun openCurrentWeatherDetails(requestedCurrentWeather: CurrentWeather) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    fun loadCurrentWeather() {
-
-        weatherRepository.getCurrentWeatherList(listOf(625665,703448,702550), object : WeatherDataSource.LoadCurrentWeatherListCallback{
+        weatherRepository.getCurrentWeatherList(object : WeatherDataSource.LoadCurrentWeatherListCallback {
             override fun onCurrentWeatherListLoaded(currentWeatherList: List<CurrentWeather>) {
                 weatherView.showCurrentWeather(currentWeatherList)
             }
@@ -44,20 +45,17 @@ class CurrentWeatherPresenter(val weatherRepository: WeatherRepository, val weat
             override fun onDataNotAvailable(throwable: Throwable) {
                 weatherView.let { weatherView.showCurrentWeatherError(throwable.message) }
             }
-
         })
-
-        /*
-        weatherRepository.getCurrentWeatherByCityName("Днепр", object : WeatherDataSource.GetCurrentWeatherCallback {
-            override fun onCurrentWeatherLoaded(currentWeather: CurrentWeather) {
-                weatherView.showCurrentWeather(currentWeather)
-            }
-
-            override fun onDataNotAvailable(throwable: Throwable) {
-                weatherView.let { weatherView.showCurrentWeatherError(throwable.message) }
-            }
-        })
-        */
-
     }
+
+
+    override fun addNewCity() {
+        weatherView.showAddCity()
+    }
+
+    override fun openCurrentWeatherDetails(requestedCurrentWeather: CurrentWeather) {
+        weatherView.showCurrentWeatherDetailsUi(requestedCurrentWeather.cityId)
+    }
+
+
 }

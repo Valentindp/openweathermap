@@ -3,11 +3,8 @@ package com.valentyn.openweathermap.models.common
 import com.google.gson.annotations.SerializedName
 
 data class Sys(
-    @field:SerializedName("type")
-    val type: Int? = null,
-
-    @field:SerializedName("id")
-    val id: Int? = null,
+    @field:SerializedName("timezone")
+    var timezone: Int? = null,
 
     @field:SerializedName("message")
     val message: Double? = null,

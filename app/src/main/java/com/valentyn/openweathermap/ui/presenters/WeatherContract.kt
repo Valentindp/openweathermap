@@ -1,5 +1,5 @@
 
-package com.valentyn.openweathermap.ui.activitys
+package com.valentyn.openweathermap.ui.presenters
 
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.ui.BasePresenter
@@ -13,9 +13,9 @@ interface WeatherContract {
 
         fun showCurrentWeather(currentWeatherList: List<CurrentWeather>)
 
-        fun showAddCurrentWeather()
+        fun showAddCity()
 
-        fun showCurrentWeatherDetailsUi(cityId: Int)
+        fun showCurrentWeatherDetailsUi(cityId: Int?)
 
         fun showCurrentWeatherError(message : String?)
 
@@ -29,7 +29,7 @@ interface WeatherContract {
 
         fun loadCurrentWeather(forceUpdate: Boolean)
 
-        fun addCurrentWeather()
+        fun addNewCity()
 
         fun openCurrentWeatherDetails(requestedCurrentWeather: CurrentWeather)
     }

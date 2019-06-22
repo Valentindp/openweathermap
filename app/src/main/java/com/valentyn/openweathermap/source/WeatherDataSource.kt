@@ -18,14 +18,24 @@ interface WeatherDataSource {
         fun onDataNotAvailable(throwable: Throwable)
     }
 
-    fun getCurrentWeatherList(listId: List<Int>, callback: LoadCurrentWeatherListCallback)
+    interface GetCurrentWeatherListIdCallback {
+
+        fun onCurrentWeatherListIdLoaded(currentWeatherListId: List<Int>)
+
+    }
+
+    fun getCurrentWeatherList(callback: LoadCurrentWeatherListCallback)
 
     fun getCurrentWeatherByCityName(cityName: String, callback: GetCurrentWeatherCallback)
 
 
     fun createCurrentWeather(currentWeather: CurrentWeather)
 
-    fun updateCurrentWeather(currentWeatherId: Int)
+    fun updateCurrentWeather(currentWeather: CurrentWeather)
+
+    fun refreshCurrentWeather()
+
+    fun deleteAllCurrentWeather()
 
     fun deleteCurrentWeather(currentWeatherId: Int)
 
