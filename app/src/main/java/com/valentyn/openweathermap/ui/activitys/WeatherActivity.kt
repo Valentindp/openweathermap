@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.valentyn.openweathermap.R
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.ui.adapters.CurrentWeatherAdapter
-import com.valentyn.openweathermap.ui.presenters.CurrentWeatherPresenter
+import com.valentyn.openweathermap.ui.presenters.WeatherPresenter
 import com.valentyn.openweathermap.ui.presenters.WeatherContract
 import com.valentyn.openweathermap.util.Injection
 import com.valentyn.openweathermap.util.RecyclerViewItemDecoration
@@ -28,7 +28,7 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.weather_activity)
 
-        presenter = CurrentWeatherPresenter(Injection.provideWeatherRepository(applicationContext), this)
+        presenter = WeatherPresenter(Injection.provideWeatherRepository(applicationContext), this)
 
         recycler_view_weather.apply {
             addItemDecoration(

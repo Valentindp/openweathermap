@@ -3,9 +3,7 @@ package com.valentyn.openweathermap.models
 import com.google.gson.annotations.SerializedName
 import com.valentyn.openweathermap.models.common.City
 
-data class DailyWeatherForecast (
-    @field:SerializedName("cod")
-    val respCode: String? = null,
+data class DailyWeatherForecast(
 
     @field:SerializedName("message")
     val message: Double? = null,
@@ -18,5 +16,4 @@ data class DailyWeatherForecast (
 
     @field:SerializedName("list")
     val dataList: List<DailyWeatherForecastData?>? = null
-){
-}
+)

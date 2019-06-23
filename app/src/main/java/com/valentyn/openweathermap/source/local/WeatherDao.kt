@@ -2,6 +2,7 @@ package com.valentyn.openweathermap.source.local
 
 import androidx.room.*
 import com.valentyn.openweathermap.models.CurrentWeather
+import com.valentyn.openweathermap.models.DailyWeatherForecastData
 
 @Dao
 interface WeatherDao {
@@ -26,4 +27,21 @@ interface WeatherDao {
 
     @Query("DELETE FROM CurrentWeather ")
     fun deleteCurrentWeather()
+
+
+
+    @Query("SELECT * FROM DailyWeatherForecastData")
+    fun getDailyDailyWeatherForecastDatatByCityId(): List<DailyWeatherForecastData>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertDailyWeatherForecastData(dailyWeatherForecastData: DailyWeatherForecastData)
+
+    @Update
+    fun updateDailyWeatherForecastData(dailyWeatherForecastData: DailyWeatherForecastData)
+
+    @Query("DELETE FROM DailyWeatherForecastData WHERE cityId = :dailyWeatherForecastDataId")
+    fun deleteDailyWeatherForecastDatatById(dailyWeatherForecastDataId: Int)
+
+    @Query("DELETE FROM DailyWeatherForecastData ")
+    fun deleteDailyWeatherForecastData()
 }

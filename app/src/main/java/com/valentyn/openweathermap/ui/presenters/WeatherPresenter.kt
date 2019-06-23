@@ -6,7 +6,7 @@ import com.valentyn.openweathermap.source.WeatherDataSource
 import com.valentyn.openweathermap.source.WeatherRepository
 import com.valentyn.openweathermap.ui.activitys.AddCityActivity
 
-class CurrentWeatherPresenter(val weatherRepository: WeatherRepository, val weatherView: WeatherContract.View) :
+class WeatherPresenter(val weatherRepository: WeatherRepository, val weatherView: WeatherContract.View) :
     WeatherContract.Presenter {
 
     private var firstLoad = true
@@ -37,13 +37,13 @@ class CurrentWeatherPresenter(val weatherRepository: WeatherRepository, val weat
             weatherRepository.refreshCurrentWeather()
         }
 
-        weatherRepository.getCurrentWeatherList(object : WeatherDataSource.LoadCurrentWeatherListCallback {
-            override fun onCurrentWeatherListLoaded(currentWeatherList: List<CurrentWeather>) {
-                weatherView.showCurrentWeather(currentWeatherList)
+        weatherRepository.getCurrentWeatherList(object : WeatherDataSource.LoadWeatherData<List<CurrentWeather>> {
+            override fun onSuccess(successData: List<CurrentWeather>) {
+                weatherView.showCurrentWeather(successData)
             }
 
-            override fun onDataNotAvailable(throwable: Throwable) {
-                weatherView.let { weatherView.showCurrentWeatherError(throwable.message) }
+            override fun onError(e: Throwable) {
+                weatherView.showCurrentWeatherError(e.message)
             }
         })
     }

@@ -31,9 +31,8 @@ data class CurrentWeather constructor(
     @field:SerializedName("coord")
     val coordData: Coord? = null,
 
-    @Ignore
     @field:SerializedName("weather")
-    val weatherList: List<Weather?>? = null,
+    var weatherList: List<Weather?>? = null,
 
     @Ignore
     @field:SerializedName("base")

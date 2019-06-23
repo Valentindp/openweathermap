@@ -1,23 +1,39 @@
 package com.valentyn.openweathermap.models
 
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
+import com.valentyn.openweathermap.models.common.Main
 import com.valentyn.openweathermap.models.common.Temp
 import com.valentyn.openweathermap.models.common.Weather
+import java.util.*
 
+@Entity(
+    foreignKeys = [ForeignKey(
+        entity = CurrentWeather::class,
+        parentColumns = ["id"], childColumns = ["cityId"], onDelete = ForeignKey.CASCADE
+    )]
+)
 class DailyWeatherForecastData(
+
+    @PrimaryKey
+    @ColumnInfo(name = "cityId")
+    var cityId: Int? = null,
+
     @field:SerializedName("dt")
-    private val dt: Int? = null,
+    var dt: Int? = null,
 
-    @field:SerializedName("temp")
-    val tempData: Temp? = null,
-
-    @field:SerializedName("pressure")
-    val pressure: Double? = null,
-
-    @field:SerializedName("humidity")
-    val humidity: Double? = null,
+    @Embedded
+    @SerializedName("main")
+    var main: Main? = null,
 
     @field:SerializedName("weather")
-    val weatherList: List<Weather?>? = null
+    var weatherList: List<Weather?>? = null
 ) {
+    val dateTime: Date?
+        get() {
+            if (dt != null) {
+                return Date(dt!!.toLong() * 1000L)
+            }
+            return null
+        }
 }

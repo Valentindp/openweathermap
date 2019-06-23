@@ -9,6 +9,9 @@ import com.valentyn.openweathermap.source.remote.WeatherRemoteDataSource
 object Injection {
     fun provideWeatherRepository(context: Context): WeatherRepository {
         val database = WeatherDatabase.getInstance(context)
-        return WeatherRepository.getInstance(WeatherRemoteDataSource, WeatherLocalDataSource.getInstance(AppExecutors(), database.weatherDao()))
+        return WeatherRepository.getInstance(
+            WeatherRemoteDataSource.getInstance(AppExecutors()),
+            WeatherLocalDataSource.getInstance(AppExecutors(), database.weatherDao())
+        )
     }
 }

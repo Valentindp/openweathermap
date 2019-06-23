@@ -1,67 +1,104 @@
 package com.valentyn.openweathermap.source
 
 import com.valentyn.openweathermap.models.CurrentWeather
+import com.valentyn.openweathermap.models.DailyWeatherForecast
+import com.valentyn.openweathermap.models.DailyWeatherForecastData
 import com.valentyn.openweathermap.source.local.WeatherLocalDataSource
 import com.valentyn.openweathermap.source.remote.WeatherRemoteDataSource
 import java.util.*
 
-class WeatherRepository(val weatherRemoteDataSource: WeatherRemoteDataSource, val weatherLocalDataSource : WeatherLocalDataSource) : WeatherDataSource {
+class WeatherRepository(
+    private val weatherRemoteDataSource: WeatherRemoteDataSource,
+    private val weatherLocalDataSource: WeatherLocalDataSource
+) : WeatherDataSource {
 
     var cachedCurrentWeather: LinkedHashMap<Int, CurrentWeather> = LinkedHashMap()
+    var cachedForecastWeather: LinkedHashMap<Int, DailyWeatherForecastData> = LinkedHashMap()
     var cacheIsDirty = false
 
-    override fun getCurrentWeatherByCityName(cityName: String, callback: WeatherDataSource.GetCurrentWeatherCallback) {
+    override fun getCurrentWeatherByCityName(
+        cityName: String,
+        callback: WeatherDataSource.LoadWeatherData<CurrentWeather>
+    ) {
 
-        weatherRemoteDataSource.getCurrentWeatherByCityName(cityName, object : WeatherDataSource.GetCurrentWeatherCallback {
-                override fun onCurrentWeatherLoaded(currentWeather: CurrentWeather) {
-                    createCurrentWeather(currentWeather)
-                    callback.onCurrentWeatherLoaded(currentWeather)
+        weatherRemoteDataSource.getCurrentWeatherByCityName(
+            cityName,
+            object : WeatherDataSource.LoadWeatherData<CurrentWeather> {
+                override fun onSuccess(successData: CurrentWeather) {
+                    createCurrentWeather(successData)
+                    callback.onSuccess(successData)
                 }
 
-                override fun onDataNotAvailable(throwable: Throwable) {
-                    callback.onDataNotAvailable(throwable)
+                override fun onError(e: Throwable) {
+                    callback.onError(e)
                 }
             })
     }
 
-    override fun getCurrentWeatherList(callback: WeatherDataSource.LoadCurrentWeatherListCallback) {
+    override fun getCurrentWeatherByCityId(
+        cityId: Int,
+        callback: WeatherDataSource.LoadWeatherData<CurrentWeather>
+    ) {
+        weatherLocalDataSource.getCurrentWeatherByCityId(
+            cityId,
+            object : WeatherDataSource.LoadWeatherData<CurrentWeather> {
+                override fun onSuccess(successData: CurrentWeather) {
+                    callback.onSuccess(successData)
+                }
+
+                override fun onError(e: Throwable) {
+                    callback.onError(e)
+                }
+            })
+    }
+
+    override fun getCurrentWeatherList(callback: WeatherDataSource.LoadWeatherData<List<CurrentWeather>>) {
 
         if (cachedCurrentWeather.isNotEmpty() && !cacheIsDirty) {
-            callback.onCurrentWeatherListLoaded(ArrayList(cachedCurrentWeather.values))
+            callback.onSuccess(ArrayList(cachedCurrentWeather.values))
             return
         }
 
         if (cacheIsDirty) {
             getCurrentWeatherFromRemoteDataSource(callback)
         } else {
-            weatherLocalDataSource.getCurrentWeatherList(object : WeatherDataSource.LoadCurrentWeatherListCallback {
-                override fun onCurrentWeatherListLoaded(currentWeatherList: List<CurrentWeather>) {
-                    refreshCache(currentWeatherList)
-                    callback.onCurrentWeatherListLoaded(ArrayList(cachedCurrentWeather.values))
+            weatherLocalDataSource.getCurrentWeatherList(object :
+                WeatherDataSource.LoadWeatherData<List<CurrentWeather>> {
+                override fun onSuccess(successData: List<CurrentWeather>) {
+                    refreshCache(successData)
+                    callback.onSuccess(ArrayList(cachedCurrentWeather.values))
                 }
 
-                override fun onDataNotAvailable(throwable: Throwable) {
+                override fun onError(e: Throwable) {
                     getCurrentWeatherFromRemoteDataSource(callback)
                 }
             })
         }
     }
 
-    private fun getCurrentWeatherFromRemoteDataSource(callback: WeatherDataSource.LoadCurrentWeatherListCallback) {
+    private fun getCurrentWeatherFromRemoteDataSource(callback: WeatherDataSource.LoadWeatherData<List<CurrentWeather>>) {
 
-        weatherLocalDataSource.getCurrentWeatherListId(object : WeatherDataSource.GetCurrentWeatherListIdCallback{
-            override fun onCurrentWeatherListIdLoaded(currentWeatherListId: List<Int>) {
+        weatherLocalDataSource.getCurrentWeatherListId(object : WeatherDataSource.LoadWeatherData<List<Int>> {
 
-                weatherRemoteDataSource.getCurrentWeatherList(currentWeatherListId, object : WeatherDataSource.LoadCurrentWeatherListCallback {
-                    override fun onCurrentWeatherListLoaded(currentWeatherList: List<CurrentWeather>) {
-                        refreshCache(currentWeatherList)
-                        refreshLocalDataSource(currentWeatherList)
-                        callback.onCurrentWeatherListLoaded(ArrayList(cachedCurrentWeather.values))
-                    }
-                    override fun onDataNotAvailable(throwable: Throwable) {
-                        callback.onDataNotAvailable(throwable)
-                    }
-                })
+            override fun onSuccess(successData: List<Int>) {
+
+                weatherRemoteDataSource.getCurrentWeatherList(
+                    successData,
+                    object : WeatherDataSource.LoadWeatherData<List<CurrentWeather>> {
+                        override fun onSuccess(successData: List<CurrentWeather>) {
+                            refreshCache(successData)
+                            refreshWeatherLocalDataSource(successData)
+                            callback.onSuccess(ArrayList(cachedCurrentWeather.values))
+                        }
+
+                        override fun onError(e: Throwable) {
+                            callback.onError(e)
+                        }
+                    })
+            }
+
+            override fun onError(e: Throwable) {
+                callback.onError(e)
             }
         })
     }
@@ -74,10 +111,28 @@ class WeatherRepository(val weatherRemoteDataSource: WeatherRemoteDataSource, va
         cacheIsDirty = false
     }
 
-    private fun refreshLocalDataSource(currentWeatherList: List<CurrentWeather>) {
+    private fun refreshForecastCache(forecastWeatherList: List<DailyWeatherForecastData>) {
+        cachedForecastWeather.clear()
+        forecastWeatherList.forEach {
+            if (it.cityId != null) cachedForecastWeather[it.cityId!!] = it
+        }
+        cacheIsDirty = false
+    }
+
+    private fun refreshWeatherLocalDataSource(currentWeatherList: List<CurrentWeather>) {
         weatherLocalDataSource.deleteAllCurrentWeather()
         for (currentWeather in currentWeatherList) {
             weatherLocalDataSource.createCurrentWeather(currentWeather)
+        }
+    }
+
+    private fun refreshWeatherForecastLocalDataSource(
+        cityId: Int,
+        DailyWeatherForecastDataList: List<DailyWeatherForecastData>
+    ) {
+        weatherLocalDataSource.deleteDailyWeatherForecast(cityId)
+        for (dailyWeatherForecastData in DailyWeatherForecastDataList) {
+            weatherLocalDataSource.createDailyWeatherForecast(dailyWeatherForecastData)
         }
     }
 
@@ -103,11 +158,94 @@ class WeatherRepository(val weatherRemoteDataSource: WeatherRemoteDataSource, va
         weatherLocalDataSource.deleteCurrentWeather(currentWeatherId)
     }
 
+
+    override fun getDailyWeatherForecastByCityID(
+        cityId: Int,
+        callback: WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>>
+    ) {
+
+        if (cachedForecastWeather.isNotEmpty() && !cacheIsDirty) {
+            callback.onSuccess(ArrayList(cachedForecastWeather.values))
+            return
+        }
+
+        if (cacheIsDirty) {
+            getDailyWeatherForecastRemoteDataSource(cityId, callback)
+        } else {
+            weatherLocalDataSource.getDailyWeatherForecastByCityID(
+                cityId,
+                object : WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>> {
+                    override fun onSuccess(successData: List<DailyWeatherForecastData>) {
+                        refreshForecastCache(successData)
+                        callback.onSuccess(ArrayList(cachedForecastWeather.values))
+                    }
+
+                    override fun onError(e: Throwable) {
+                        getDailyWeatherForecastRemoteDataSource(cityId, callback)
+                    }
+                })
+        }
+    }
+
+    private fun getDailyWeatherForecastRemoteDataSource(
+        cityId: Int, callback: WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>>
+    ) {
+        weatherRemoteDataSource.getDailyWeatherForecastList(cityId,
+            object : WeatherDataSource.LoadWeatherData<DailyWeatherForecast> {
+                override fun onSuccess(successData: DailyWeatherForecast) {
+                    val dailyWeatherForecastDataList = getDailyWeatherForecastDataFromDailyWeatherForecast(successData)
+                    refreshForecastCache(dailyWeatherForecastDataList)
+                    refreshWeatherForecastLocalDataSource(cityId, dailyWeatherForecastDataList)
+                    callback.onSuccess(ArrayList(cachedForecastWeather.values))
+                }
+
+                override fun onError(e: Throwable) {
+                    callback.onError(e)
+                }
+            })
+
+    }
+
+    private fun getDailyWeatherForecastDataFromDailyWeatherForecast(dailyWeatherForecast: DailyWeatherForecast): List<DailyWeatherForecastData> {
+
+        val dailyWeatherForecastDataList = mutableListOf<DailyWeatherForecastData>()
+        val cityId = dailyWeatherForecast.cityData?.id
+
+        dailyWeatherForecast.dataList?.forEach {
+            it?.let {
+                it.cityId = cityId
+                dailyWeatherForecastDataList.add(it)
+            }
+        }
+
+        return dailyWeatherForecastDataList
+    }
+
+    override fun createDailyWeatherForecast(dailyWeatherForecastData: DailyWeatherForecastData) {
+        weatherLocalDataSource.createDailyWeatherForecast(dailyWeatherForecastData)
+    }
+
+    override fun updateDailyWeatherForecast(dailyWeatherForecastData: DailyWeatherForecastData) {
+        weatherLocalDataSource.updateDailyWeatherForecast(dailyWeatherForecastData)
+    }
+
+    override fun deleteAllDailyWeatherForecast() {
+        weatherLocalDataSource.deleteAllDailyWeatherForecast()
+    }
+
+    override fun deleteDailyWeatherForecast(dailyWeatherForecastDataId: Int) {
+        weatherLocalDataSource.deleteDailyWeatherForecast(dailyWeatherForecastDataId)
+    }
+
     companion object {
 
         private var INSTANCE: WeatherRepository? = null
 
-        @JvmStatic fun getInstance(weatherRemoteDataSource: WeatherRemoteDataSource, weatherLocalDataSource : WeatherLocalDataSource): WeatherRepository {
+        @JvmStatic
+        fun getInstance(
+            weatherRemoteDataSource: WeatherRemoteDataSource,
+            weatherLocalDataSource: WeatherLocalDataSource
+        ): WeatherRepository {
             return INSTANCE ?: WeatherRepository(weatherRemoteDataSource, weatherLocalDataSource)
                 .apply { INSTANCE = this }
         }

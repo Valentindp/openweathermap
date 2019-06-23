@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/primaryLightColor">
+
+    <TextView
+            android:id="@+id/city_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            tools:text="City title"
+            android:layout_margin="15dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textSize="40sp"/>
+
+    <TextView
+            android:id="@+id/weather_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/city_title"
+            android:layout_centerHorizontal="true"
+            tools:text="Date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+    <TextView
+            android:id="@+id/weather_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_margin="15dp"
+            android:textSize="70sp"/>
+
+    <TextView
+            android:id="@+id/weather_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/weather_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="15dp"
+            tools:text="Details"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+    <TextView
+            android:id="@+id/current_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            tools:text="Current temperature"
+            android:layout_margin="15dp"
+            android:textSize="40sp"
+            android:layout_below="@+id/weather_details"/>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+
+        <ImageButton
+                android:id="@+id/to_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/button_margin"
+                android:background="@color/primaryLightColor"
+                android:contentDescription="@string/contentD_to_the_list"
+                android:layout_marginEnd="@dimen/button_margin"
+                android:src="@drawable/ic_view_headline_black_24dp"
+                android:tint="@color/secondaryTextColor"
+                android:layout_marginTop="@dimen/button_margin"
+                android:layout_marginStart="@dimen/button_margin"
+                android:layout_marginBottom="@dimen/button_margin"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

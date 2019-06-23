@@ -1,32 +1,24 @@
 package com.valentyn.openweathermap.source
 
 import com.valentyn.openweathermap.models.CurrentWeather
+import com.valentyn.openweathermap.models.DailyWeatherForecastData
 
 interface WeatherDataSource {
 
-    interface LoadCurrentWeatherListCallback {
+    interface LoadWeatherData<T> {
 
-        fun onCurrentWeatherListLoaded(currentWeatherList: List<CurrentWeather>)
+        fun onSuccess(successData: T)
 
-        fun onDataNotAvailable(throwable: Throwable)
+        fun onError(e: Throwable)
     }
 
-    interface GetCurrentWeatherCallback {
+    fun getCurrentWeatherList(callback: LoadWeatherData<List<CurrentWeather>>)
 
-        fun onCurrentWeatherLoaded(currentWeather: CurrentWeather)
+    fun getCurrentWeatherByCityName(cityName: String, callback: LoadWeatherData<CurrentWeather>)
 
-        fun onDataNotAvailable(throwable: Throwable)
-    }
+    fun getCurrentWeatherByCityId(cityId: Int, callback: LoadWeatherData<CurrentWeather>)
 
-    interface GetCurrentWeatherListIdCallback {
-
-        fun onCurrentWeatherListIdLoaded(currentWeatherListId: List<Int>)
-
-    }
-
-    fun getCurrentWeatherList(callback: LoadCurrentWeatherListCallback)
-
-    fun getCurrentWeatherByCityName(cityName: String, callback: GetCurrentWeatherCallback)
+    fun getDailyWeatherForecastByCityID(cityId: Int, callback: LoadWeatherData<List<DailyWeatherForecastData>>)
 
 
     fun createCurrentWeather(currentWeather: CurrentWeather)
@@ -38,5 +30,14 @@ interface WeatherDataSource {
     fun deleteAllCurrentWeather()
 
     fun deleteCurrentWeather(currentWeatherId: Int)
+
+
+    fun createDailyWeatherForecast(dailyWeatherForecastData: DailyWeatherForecastData)
+
+    fun updateDailyWeatherForecast(dailyWeatherForecastData: DailyWeatherForecastData)
+
+    fun deleteAllDailyWeatherForecast()
+
+    fun deleteDailyWeatherForecast(dailyWeatherForecastDataId: Int)
 
 }

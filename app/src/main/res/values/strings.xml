@@ -5,4 +5,7 @@
     <string name="hint_city_title">City title</string>
     <string name="button_cancel_text">Cancel</string>
     <string name="Error_city_not_found">Сity ​​not found</string>
+    <string name="contentD_to_the_list">To the list</string>
+    <string name="no_data">No data</string>
+    <string name="weather_details">%1$s \nHumidity: %2$s%% \nPressure: %3$s hPa</string>
 </resources>
