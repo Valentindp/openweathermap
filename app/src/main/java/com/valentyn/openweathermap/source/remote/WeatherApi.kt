@@ -17,7 +17,7 @@ interface WeatherApi {
     @GET("group")
     fun getCurrentWeatherByArrayCityID(@QueryMap options: Map<String, String>): Call<CurrentWeatherList>
 
-    @GET("forecast/daily")
+    @GET("forecast")
     fun getDailyWeatherForecastByCityID(@QueryMap options: Map<String, String>): Call<DailyWeatherForecast>
 
     companion object Factory {

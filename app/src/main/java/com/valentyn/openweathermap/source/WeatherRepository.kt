@@ -13,7 +13,6 @@ class WeatherRepository(
 ) : WeatherDataSource {
 
     var cachedCurrentWeather: LinkedHashMap<Int, CurrentWeather> = LinkedHashMap()
-    var cachedForecastWeather: LinkedHashMap<Int, DailyWeatherForecastData> = LinkedHashMap()
     var cacheIsDirty = false
 
     override fun getCurrentWeatherByCityName(
@@ -111,13 +110,6 @@ class WeatherRepository(
         cacheIsDirty = false
     }
 
-    private fun refreshForecastCache(forecastWeatherList: List<DailyWeatherForecastData>) {
-        cachedForecastWeather.clear()
-        forecastWeatherList.forEach {
-            if (it.cityId != null) cachedForecastWeather[it.cityId!!] = it
-        }
-        cacheIsDirty = false
-    }
 
     private fun refreshWeatherLocalDataSource(currentWeatherList: List<CurrentWeather>) {
         weatherLocalDataSource.deleteAllCurrentWeather()
@@ -141,7 +133,7 @@ class WeatherRepository(
         cachedCurrentWeather.clear()
     }
 
-    override fun refreshCurrentWeather() {
+    fun refreshCurrentWeather() {
         cacheIsDirty = true
     }
 
@@ -164,46 +156,27 @@ class WeatherRepository(
         callback: WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>>
     ) {
 
-        if (cachedForecastWeather.isNotEmpty() && !cacheIsDirty) {
-            callback.onSuccess(ArrayList(cachedForecastWeather.values))
-            return
-        }
-
-        if (cacheIsDirty) {
-            getDailyWeatherForecastRemoteDataSource(cityId, callback)
-        } else {
-            weatherLocalDataSource.getDailyWeatherForecastByCityID(
-                cityId,
-                object : WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>> {
-                    override fun onSuccess(successData: List<DailyWeatherForecastData>) {
-                        refreshForecastCache(successData)
-                        callback.onSuccess(ArrayList(cachedForecastWeather.values))
-                    }
-
-                    override fun onError(e: Throwable) {
-                        getDailyWeatherForecastRemoteDataSource(cityId, callback)
-                    }
-                })
-        }
-    }
-
-    private fun getDailyWeatherForecastRemoteDataSource(
-        cityId: Int, callback: WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>>
-    ) {
         weatherRemoteDataSource.getDailyWeatherForecastList(cityId,
             object : WeatherDataSource.LoadWeatherData<DailyWeatherForecast> {
                 override fun onSuccess(successData: DailyWeatherForecast) {
                     val dailyWeatherForecastDataList = getDailyWeatherForecastDataFromDailyWeatherForecast(successData)
-                    refreshForecastCache(dailyWeatherForecastDataList)
                     refreshWeatherForecastLocalDataSource(cityId, dailyWeatherForecastDataList)
-                    callback.onSuccess(ArrayList(cachedForecastWeather.values))
+                    callback.onSuccess(dailyWeatherForecastDataList)
                 }
-
                 override fun onError(e: Throwable) {
-                    callback.onError(e)
+                    weatherLocalDataSource.getDailyWeatherForecastByCityID(
+                        cityId,
+                        object : WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>> {
+                            override fun onSuccess(successData: List<DailyWeatherForecastData>) {
+                                callback.onSuccess(successData)
+                            }
+
+                            override fun onError(e: Throwable) {
+                                callback.onError(e)
+                            }
+                        })
                 }
             })
-
     }
 
     private fun getDailyWeatherForecastDataFromDailyWeatherForecast(dailyWeatherForecast: DailyWeatherForecast): List<DailyWeatherForecastData> {
@@ -213,7 +186,7 @@ class WeatherRepository(
 
         dailyWeatherForecast.dataList?.forEach {
             it?.let {
-                it.cityId = cityId
+                it.forecastCityId = cityId
                 dailyWeatherForecastDataList.add(it)
             }
         }

@@ -7,17 +7,14 @@ import com.valentyn.openweathermap.models.common.Temp
 import com.valentyn.openweathermap.models.common.Weather
 import java.util.*
 
-@Entity(
-    foreignKeys = [ForeignKey(
-        entity = CurrentWeather::class,
-        parentColumns = ["id"], childColumns = ["cityId"], onDelete = ForeignKey.CASCADE
-    )]
-)
+@Entity
 class DailyWeatherForecastData(
 
-    @PrimaryKey
-    @ColumnInfo(name = "cityId")
-    var cityId: Int? = null,
+    @PrimaryKey(autoGenerate = true)
+    val id : Int,
+
+    @ColumnInfo(name = "forecastCityId", index = true)
+    var forecastCityId: Int? = null,
 
     @field:SerializedName("dt")
     var dt: Int? = null,

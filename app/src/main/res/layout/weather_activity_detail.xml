@@ -11,7 +11,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             tools:text="City title"
-            android:layout_margin="15dp"
+            android:layout_margin="@dimen/margin_weather_det"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textSize="40sp"/>
 
@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/city_title"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_weather_det"
             tools:text="Date"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
@@ -28,11 +29,11 @@
             android:id="@+id/weather_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_margin="15dp"
-            android:textSize="70sp"/>
+            android:textSize="70sp"
+            android:layout_margin="@dimen/margin_weather_det"
+            android:layout_below="@+id/weather_date"/>
 
     <TextView
             android:id="@+id/weather_details"
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/weather_icon"
             android:layout_centerHorizontal="true"
-            android:layout_margin="15dp"
+            android:layout_margin="@dimen/margin_weather_det"
             tools:text="Details"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
@@ -51,9 +52,19 @@
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
             tools:text="Current temperature"
-            android:layout_margin="15dp"
+            android:layout_margin="@dimen/margin_weather_det"
             android:textSize="40sp"
             android:layout_below="@+id/weather_details"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_forecast_weather"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/current_temperature"
+            android:layout_above="@+id/rl_bottom"
+    >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <RelativeLayout
             android:layout_width="match_parent"

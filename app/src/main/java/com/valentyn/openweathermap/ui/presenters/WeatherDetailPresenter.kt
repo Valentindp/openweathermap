@@ -1,6 +1,7 @@
 package com.valentyn.openweathermap.ui.presenters
 
 import com.valentyn.openweathermap.models.CurrentWeather
+import com.valentyn.openweathermap.models.DailyWeatherForecastData
 import com.valentyn.openweathermap.source.WeatherDataSource
 import com.valentyn.openweathermap.source.WeatherRepository
 
@@ -32,6 +33,14 @@ class WeatherDetailPresenter(
 
             override fun onError(e: Throwable) {
                weatherDetailView.showMissingData()
+            }
+        })
+
+        weatherRepository.getDailyWeatherForecastByCityID(cityId, object : WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>>{
+            override fun onSuccess(successData: List<DailyWeatherForecastData>) {
+                weatherDetailView.showForecastWeather(successData)
+            }
+            override fun onError(e: Throwable) {
             }
         })
 

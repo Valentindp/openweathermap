@@ -15,7 +15,7 @@
     >
 
         <TextView
-                android:id="@+id/dt"
+                android:id="@+id/dt_forecast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"

@@ -25,8 +25,6 @@ interface WeatherDataSource {
 
     fun updateCurrentWeather(currentWeather: CurrentWeather)
 
-    fun refreshCurrentWeather()
-
     fun deleteAllCurrentWeather()
 
     fun deleteCurrentWeather(currentWeatherId: Int)

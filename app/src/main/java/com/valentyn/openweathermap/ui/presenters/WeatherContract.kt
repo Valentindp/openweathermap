@@ -21,6 +21,8 @@ interface WeatherContract {
 
         fun showSuccessfullySavedMessage()
 
+       fun showMessageDeleteItem(cityTitle : String)
+
     }
 
     interface Presenter : BasePresenter {
@@ -30,6 +32,9 @@ interface WeatherContract {
         fun loadCurrentWeather(forceUpdate: Boolean)
 
         fun addNewCity()
+
+        fun deleteCity(currentWeather: CurrentWeather)
+
 
         fun openCurrentWeatherDetails(requestedCurrentWeather: CurrentWeather)
     }

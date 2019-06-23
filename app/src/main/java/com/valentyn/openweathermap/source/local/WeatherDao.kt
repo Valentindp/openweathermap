@@ -26,12 +26,12 @@ interface WeatherDao {
     fun deleteCurrentWeatherById(currentWeatherId: Int)
 
     @Query("DELETE FROM CurrentWeather ")
-    fun deleteCurrentWeather()
+    fun deleteAllCurrentWeather()
 
 
 
     @Query("SELECT * FROM DailyWeatherForecastData")
-    fun getDailyDailyWeatherForecastDatatByCityId(): List<DailyWeatherForecastData>
+    fun getDailyWeatherForecastDatatByCityId(): List<DailyWeatherForecastData>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDailyWeatherForecastData(dailyWeatherForecastData: DailyWeatherForecastData)
@@ -39,9 +39,9 @@ interface WeatherDao {
     @Update
     fun updateDailyWeatherForecastData(dailyWeatherForecastData: DailyWeatherForecastData)
 
-    @Query("DELETE FROM DailyWeatherForecastData WHERE cityId = :dailyWeatherForecastDataId")
+    @Query("DELETE FROM DailyWeatherForecastData WHERE forecastCityId = :dailyWeatherForecastDataId")
     fun deleteDailyWeatherForecastDatatById(dailyWeatherForecastDataId: Int)
 
-    @Query("DELETE FROM DailyWeatherForecastData ")
-    fun deleteDailyWeatherForecastData()
+    @Query("DELETE FROM DailyWeatherForecastData")
+    fun deleteAllDailyWeatherForecastData()
 }

@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.valentyn.openweathermap.R
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.ui.adapters.CurrentWeatherAdapter
 import com.valentyn.openweathermap.ui.presenters.WeatherPresenter
@@ -14,15 +13,28 @@ import com.valentyn.openweathermap.ui.presenters.WeatherContract
 import com.valentyn.openweathermap.util.Injection
 import com.valentyn.openweathermap.util.RecyclerViewItemDecoration
 import kotlinx.android.synthetic.main.weather_activity.*
+import com.valentyn.openweathermap.util.SwipeToDeleteCallback
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.valentyn.openweathermap.R
 
 class WeatherActivity : AppCompatActivity(), WeatherContract.View {
 
     override lateinit var presenter: WeatherContract.Presenter
 
-    private val currentWeatherAdapter: CurrentWeatherAdapter =
-        CurrentWeatherAdapter(ArrayList()) { clickedCurrentWeather: CurrentWeather ->
-            onCurrentWeatherClick(clickedCurrentWeather)
+    internal var itemListener: WeatherItemListener = object : WeatherItemListener {
+
+        override fun onWeatherClick(clickedCurrentWeather: CurrentWeather) {
+            presenter.openCurrentWeatherDetails(clickedCurrentWeather)
         }
+
+        override fun onDeleteItem(currentWeather: CurrentWeather) {
+            presenter.deleteCity(currentWeather)
+        }
+
+    }
+
+    private val currentWeatherAdapter: CurrentWeatherAdapter =
+        CurrentWeatherAdapter(ArrayList(), itemListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +49,11 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = currentWeatherAdapter
+
         }
+
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(baseContext, currentWeatherAdapter))
+        itemTouchHelper.attachToRecyclerView(recycler_view_weather)
 
         fab_add_city.apply {
             setImageResource(R.drawable.ic_add_white_24dp)
@@ -50,9 +66,6 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
         presenter.start()
     }
 
-    fun onCurrentWeatherClick(clickedCurrentWeather: CurrentWeather) {
-        presenter.openCurrentWeatherDetails(clickedCurrentWeather)
-    }
 
     override fun setLoadingIndicator(active: Boolean) {
 
@@ -85,6 +98,18 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
 
     private fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun showMessageDeleteItem(cityTitle: String) {
+        Toast.makeText(this, getString(R.string.rv_item_deleted, cityTitle), Toast.LENGTH_LONG).show()
+    }
+
+    interface WeatherItemListener {
+
+        fun onWeatherClick(clickedCurrentWeather: CurrentWeather)
+
+        fun onDeleteItem(currentWeather: CurrentWeather)
+
     }
 
 }

@@ -53,6 +53,15 @@ class WeatherPresenter(val weatherRepository: WeatherRepository, val weatherView
         weatherView.showAddCity()
     }
 
+    override fun deleteCity(currentWeather: CurrentWeather) {
+        currentWeather.cityId?.let {
+            weatherRepository.deleteCurrentWeather(it)
+            weatherRepository.deleteDailyWeatherForecast(it)
+        }
+        currentWeather.cityName?.let { weatherView.showMessageDeleteItem(it) }
+
+    }
+
     override fun openCurrentWeatherDetails(requestedCurrentWeather: CurrentWeather) {
         weatherView.showCurrentWeatherDetailsUi(requestedCurrentWeather.cityId)
     }

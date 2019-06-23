@@ -4,4 +4,5 @@
     <dimen name="weather_item_margin">10dp</dimen>
     <dimen name="edit_text_margin">10dp</dimen>
     <dimen name="button_margin">10dp</dimen>
+    <dimen name="margin_weather_det">15dp</dimen>
 </resources>

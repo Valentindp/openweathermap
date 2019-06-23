@@ -1,0 +1,91 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="140dp"
+              android:layout_height="180dp"
+              android:orientation="vertical"
+              android:background="@color/primaryLightColor">
+
+    <androidx.cardview.widget.CardView
+            android:id="@+id/weather_card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardElevation="3dp"
+            app:cardCornerRadius="10dp"
+            >
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/dt_forecast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Date"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/secondaryTextColor"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/weather_item_margin"
+            />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/temp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Temperature"
+                    android:textColor="@color/secondaryTextColor"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:layout_below="@id/dt_forecast"
+                    android:layout_marginTop="@dimen/weather_item_margin"
+            />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Description"
+                    android:textColor="@color/secondaryTextColor"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:layout_below="@id/temp"
+            />
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/humidity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Humidity"
+                    android:textColor="@color/secondaryTextColor"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:layout_below="@id/description"
+            />
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/pressure"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Pressure"
+                    android:textColor="@color/secondaryTextColor"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:layout_below="@id/humidity"
+
+            />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

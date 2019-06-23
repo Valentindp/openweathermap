@@ -2,8 +2,11 @@ package com.valentyn.openweathermap.ui.activitys
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.valentyn.openweathermap.R
 import com.valentyn.openweathermap.models.CurrentWeather
+import com.valentyn.openweathermap.models.DailyWeatherForecastData
+import com.valentyn.openweathermap.ui.adapters.ForecastWeatherAdapter
 import com.valentyn.openweathermap.ui.presenters.WeatherDetailContract
 import com.valentyn.openweathermap.ui.presenters.WeatherDetailPresenter
 import com.valentyn.openweathermap.util.Injection
@@ -11,10 +14,13 @@ import com.valentyn.openweathermap.util.getFormatDate
 import com.valentyn.openweathermap.util.getFormatTemp
 import kotlinx.android.synthetic.main.weather_activity_detail.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class WeatherActivityDetail : AppCompatActivity(), WeatherDetailContract.View {
 
+
     override lateinit var presenter: WeatherDetailContract.Presenter
+    private val forecastWeatherAdapter = ForecastWeatherAdapter(ArrayList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +29,13 @@ class WeatherActivityDetail : AppCompatActivity(), WeatherDetailContract.View {
         val cityId = intent.getIntExtra(EXTRA_CITY_ID, 0)
 
         presenter = WeatherDetailPresenter(cityId, Injection.provideWeatherRepository(applicationContext), this)
+
+        rv_forecast_weather.apply {
+            setHasFixedSize(false)
+            isHorizontalScrollBarEnabled = true
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = forecastWeatherAdapter
+        }
 
         to_list.setOnClickListener { onBackPressed() }
     }
@@ -39,6 +52,10 @@ class WeatherActivityDetail : AppCompatActivity(), WeatherDetailContract.View {
 
     override fun showDate(date: Date?) {
         weather_date.text = getFormatDate(date)
+    }
+
+    override fun showForecastWeather(list: List<DailyWeatherForecastData>) {
+        forecastWeatherAdapter.updateData(list)
     }
 
     override fun showDetails(details: CurrentWeather) {

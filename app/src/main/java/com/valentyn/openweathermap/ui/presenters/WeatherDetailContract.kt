@@ -1,6 +1,7 @@
 package com.valentyn.openweathermap.ui.presenters
 
 import com.valentyn.openweathermap.models.CurrentWeather
+import com.valentyn.openweathermap.models.DailyWeatherForecastData
 import com.valentyn.openweathermap.ui.BasePresenter
 import com.valentyn.openweathermap.ui.BaseView
 import java.util.*
@@ -18,6 +19,8 @@ interface WeatherDetailContract {
         fun showDetails(details: CurrentWeather)
 
         fun showCurrentTemperature(temp: Double?)
+
+        fun showForecastWeather(list:List<DailyWeatherForecastData>)
 
     }
 
