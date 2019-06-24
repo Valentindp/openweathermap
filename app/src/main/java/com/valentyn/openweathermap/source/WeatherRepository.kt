@@ -147,6 +147,7 @@ class WeatherRepository(
     }
 
     override fun deleteCurrentWeather(currentWeatherId: Int) {
+        cachedCurrentWeather.remove(currentWeatherId)
         weatherLocalDataSource.deleteCurrentWeather(currentWeatherId)
     }
 

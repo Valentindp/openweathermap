@@ -26,7 +26,7 @@ class WeatherPresenter(val weatherRepository: WeatherRepository) : MvpPresenter<
         }
     }
 
-    fun loadCurrentWeather(forceUpdate: Boolean) {
+    private fun loadCurrentWeather(forceUpdate: Boolean) {
         if (forceUpdate) {
             weatherRepository.refreshCurrentWeather()
         }

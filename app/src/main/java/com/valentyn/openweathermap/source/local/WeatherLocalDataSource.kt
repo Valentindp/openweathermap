@@ -76,7 +76,7 @@ class WeatherLocalDataSource private constructor(
         callback: WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>>
     ) {
         appExecutors.diskIO.execute {
-            val DailyWeatherForecastList = weatherDao.getDailyWeatherForecastDatatByCityId()
+            val DailyWeatherForecastList = weatherDao.getDailyWeatherForecastDataByCityId()
             appExecutors.mainThread.execute {
                 if (DailyWeatherForecastList.isEmpty()) {
                     callback.onError(object : Throwable("No weather data") {})
@@ -100,7 +100,7 @@ class WeatherLocalDataSource private constructor(
     }
 
     override fun deleteDailyWeatherForecast(dailyWeatherForecastDataId: Int) {
-        appExecutors.diskIO.execute { weatherDao.deleteDailyWeatherForecastDatatById(dailyWeatherForecastDataId) }
+        appExecutors.diskIO.execute { weatherDao.deleteDailyWeatherForecastDataById(dailyWeatherForecastDataId) }
     }
 
     companion object {
