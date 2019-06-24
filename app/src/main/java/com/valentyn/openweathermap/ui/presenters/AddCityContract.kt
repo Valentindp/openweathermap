@@ -1,20 +1,13 @@
 package com.valentyn.openweathermap.ui.presenters
 
-import com.valentyn.openweathermap.ui.BasePresenter
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.valentyn.openweathermap.ui.BaseView
 
-interface AddCityContract {
+@StateStrategyType(SkipStrategy ::class)
+interface AddCityContract : BaseView {
 
-    interface View : BaseView<Presenter> {
+    fun showCurrentWeatherList()
 
-        fun showCurrentWeatherList()
-
-        fun showNotFoundError(message: String?)
-    }
-
-    interface Presenter : BasePresenter{
-
-       fun saveCity(cityTitle : String)
-    }
-
+    fun showNotFoundError(message: String?)
 }

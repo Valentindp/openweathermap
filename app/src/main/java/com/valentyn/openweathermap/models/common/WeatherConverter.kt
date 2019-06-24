@@ -1,6 +1,6 @@
 package com.valentyn.openweathermap.models.common
 
-import androidx.room.TypeConverter
+import android.arch.persistence.room.TypeConverter
 import com.google.gson.reflect.TypeToken
 import com.google.gson.Gson
 

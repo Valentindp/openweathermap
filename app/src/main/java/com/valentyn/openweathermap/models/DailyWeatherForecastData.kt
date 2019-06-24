@@ -1,9 +1,8 @@
 package com.valentyn.openweathermap.models
 
-import androidx.room.*
+import android.arch.persistence.room.*
 import com.google.gson.annotations.SerializedName
 import com.valentyn.openweathermap.models.common.Main
-import com.valentyn.openweathermap.models.common.Temp
 import com.valentyn.openweathermap.models.common.Weather
 import java.util.*
 

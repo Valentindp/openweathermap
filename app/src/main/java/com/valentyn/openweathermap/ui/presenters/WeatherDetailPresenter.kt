@@ -1,28 +1,26 @@
 package com.valentyn.openweathermap.ui.presenters
 
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.models.DailyWeatherForecastData
 import com.valentyn.openweathermap.source.WeatherDataSource
 import com.valentyn.openweathermap.source.WeatherRepository
 
+@InjectViewState
 class WeatherDetailPresenter(
     private val cityId: Int,
-    private val weatherRepository: WeatherRepository,
-    private val weatherDetailView: WeatherDetailContract.View
-) : WeatherDetailContract.Presenter {
+    private val weatherRepository: WeatherRepository
+) : MvpPresenter<WeatherDetailContract>() {
 
-    init {
-        weatherDetailView.presenter = this
-    }
-
-    override fun start() {
+     fun start() {
         openWeather()
     }
 
     private fun openWeather(){
 
         if (cityId == 0){
-            weatherDetailView.showMissingData()
+            viewState.showMissingData()
             return
         }
 
@@ -32,13 +30,13 @@ class WeatherDetailPresenter(
             }
 
             override fun onError(e: Throwable) {
-               weatherDetailView.showMissingData()
+                viewState.showMissingData()
             }
         })
 
         weatherRepository.getDailyWeatherForecastByCityID(cityId, object : WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>>{
             override fun onSuccess(successData: List<DailyWeatherForecastData>) {
-                weatherDetailView.showForecastWeather(successData)
+                viewState.showForecastWeather(successData)
             }
             override fun onError(e: Throwable) {
             }
@@ -47,7 +45,7 @@ class WeatherDetailPresenter(
     }
 
     fun showWeather(currentWeather: CurrentWeather){
-        weatherDetailView.apply {
+        viewState.apply {
             showDate(currentWeather.dateTime)
             showCityTitle(currentWeather.cityName)
             showCurrentTemperature(currentWeather.main?.temp)

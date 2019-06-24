@@ -1,7 +1,8 @@
 package com.valentyn.openweathermap.ui
 
-interface BaseView<T> {
+import com.arellomobile.mvp.MvpView
 
-    var presenter: T
+interface BaseView : MvpView {
+
 
 }

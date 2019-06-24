@@ -1,9 +1,9 @@
 package com.valentyn.openweathermap.ui.adapters
 
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.valentyn.openweathermap.R
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.ui.activitys.WeatherActivity

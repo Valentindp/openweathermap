@@ -3,14 +3,13 @@ package com.valentyn.openweathermap.util
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import android.graphics.drawable.ColorDrawable
-import androidx.core.content.ContextCompat
 import android.graphics.drawable.Drawable
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import com.valentyn.openweathermap.R
 import com.valentyn.openweathermap.ui.adapters.CurrentWeatherAdapter
-
 
 class SwipeToDeleteCallback(val context: Context, var adapter: CurrentWeatherAdapter) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {

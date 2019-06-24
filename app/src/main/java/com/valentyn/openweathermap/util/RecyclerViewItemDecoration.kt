@@ -1,8 +1,8 @@
 package com.valentyn.openweathermap.util
 
 import android.graphics.Canvas
-import androidx.recyclerview.widget.RecyclerView
 import android.graphics.drawable.Drawable
+import android.support.v7.widget.RecyclerView
 
 class RecyclerViewItemDecoration(private val divider: Drawable?) : RecyclerView.ItemDecoration() {
 

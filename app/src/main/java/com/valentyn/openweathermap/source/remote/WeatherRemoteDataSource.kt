@@ -3,7 +3,6 @@ package com.valentyn.openweathermap.source.remote
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.models.CurrentWeatherList
 import com.valentyn.openweathermap.models.DailyWeatherForecast
-import com.valentyn.openweathermap.models.DailyWeatherForecastData
 import com.valentyn.openweathermap.source.WeatherDataSource
 import com.valentyn.openweathermap.util.AppExecutors
 import org.json.JSONException

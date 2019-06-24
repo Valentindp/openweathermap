@@ -2,13 +2,10 @@ package com.valentyn.openweathermap.ui.presenters
 
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.models.DailyWeatherForecastData
-import com.valentyn.openweathermap.ui.BasePresenter
 import com.valentyn.openweathermap.ui.BaseView
 import java.util.*
 
-interface WeatherDetailContract {
-
-    interface View : BaseView<Presenter>{
+interface WeatherDetailContract : BaseView {
 
         fun showMissingData()
 
@@ -22,9 +19,4 @@ interface WeatherDetailContract {
 
         fun showForecastWeather(list:List<DailyWeatherForecastData>)
 
-    }
-
-    interface Presenter : BasePresenter{
-
-    }
 }

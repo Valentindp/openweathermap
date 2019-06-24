@@ -1,6 +1,6 @@
 package com.valentyn.openweathermap.source.local
 
-import androidx.room.*
+import android.arch.persistence.room.*
 import com.valentyn.openweathermap.models.CurrentWeather
 import com.valentyn.openweathermap.models.DailyWeatherForecastData
 

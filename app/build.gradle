@@ -5,13 +5,14 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
+
     defaultConfig {
         applicationId "com.valentyn.openweathermap"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -22,24 +23,16 @@ android {
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
-    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
-    implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupport"
-    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
-    implementation "androidx.room:room-runtime:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-
-    // Android Testing Support Library - Instrumented testing
-    androidTestImplementation "androidx.test:runner:$androidXTestVersion"
-    androidTestImplementation "androidx.test:rules:$androidXTestVersion"
-    androidTestImplementation "androidx.room:room-testing:$roomVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:$espressoVersion"
-    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoVersion"
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation "com.arello-mobile:moxy:$moxyVersion"
+    implementation "com.arello-mobile:moxy-app-compat:$moxyVersion"
+    implementation "com.android.support:design:$appCompatVersion"
+    implementation "com.android.support:recyclerview-v7:$appCompatVersion"
+    implementation "com.android.support:appcompat-v7:$appCompatVersion"
+    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     // Dependencies for local unit tests
     androidTestImplementation "junit:junit:$junitVersion"

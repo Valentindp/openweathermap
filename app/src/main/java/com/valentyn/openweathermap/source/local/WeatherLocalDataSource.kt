@@ -10,14 +10,14 @@ class WeatherLocalDataSource private constructor(
     val weatherDao: WeatherDao
 ) : WeatherDataSource {
 
-    private val defaultList = listOf(703448,709930,702550) // id for Lviv, Dnipro, Kyiv
+    private val defaultList = listOf(703448, 709930, 702550) // id for Lviv, Dnipro, Kyiv
 
     override fun getCurrentWeatherList(callback: WeatherDataSource.LoadWeatherData<List<CurrentWeather>>) {
         appExecutors.diskIO.execute {
             val currentWeatherList = weatherDao.getCurrentWeather()
             appExecutors.mainThread.execute {
                 if (currentWeatherList.isEmpty()) {
-                    callback.onError(object : Throwable("No weather data"){})
+                    callback.onError(object : Throwable("No weather data") {})
                 } else {
                     callback.onSuccess(currentWeatherList)
                 }
@@ -25,7 +25,10 @@ class WeatherLocalDataSource private constructor(
         }
     }
 
-    override fun getCurrentWeatherByCityName(cityName: String, callback: WeatherDataSource.LoadWeatherData<CurrentWeather>) {
+    override fun getCurrentWeatherByCityName(
+        cityName: String,
+        callback: WeatherDataSource.LoadWeatherData<CurrentWeather>
+    ) {
         // Not required for the local data source
     }
 
@@ -33,16 +36,12 @@ class WeatherLocalDataSource private constructor(
         appExecutors.diskIO.execute {
             val currentWeather = weatherDao.getCurrentWeatherById(cityId)
             appExecutors.mainThread.execute {
-                if (currentWeather != null) {
-                    callback.onSuccess(currentWeather)
-                } else {
-                    callback.onError(object : Throwable("No weather data"){})
-                }
+                callback.onSuccess(currentWeather)
             }
         }
     }
 
-    fun getCurrentWeatherListId(callback : WeatherDataSource.LoadWeatherData<List<Int>>){
+    fun getCurrentWeatherListId(callback: WeatherDataSource.LoadWeatherData<List<Int>>) {
         appExecutors.diskIO.execute {
             val currentWeatherListId = weatherDao.getCurrentWeatherListId()
             appExecutors.mainThread.execute {
@@ -72,12 +71,15 @@ class WeatherLocalDataSource private constructor(
     }
 
 
-    override fun getDailyWeatherForecastByCityID(cityId: Int, callback: WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>>) {
+    override fun getDailyWeatherForecastByCityID(
+        cityId: Int,
+        callback: WeatherDataSource.LoadWeatherData<List<DailyWeatherForecastData>>
+    ) {
         appExecutors.diskIO.execute {
             val DailyWeatherForecastList = weatherDao.getDailyWeatherForecastDatatByCityId()
             appExecutors.mainThread.execute {
                 if (DailyWeatherForecastList.isEmpty()) {
-                    callback.onError(object : Throwable("No weather data"){})
+                    callback.onError(object : Throwable("No weather data") {})
                 } else {
                     callback.onSuccess(DailyWeatherForecastList)
                 }
